@@ -1,4 +1,5 @@
-// import React, { useState } from 'react';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import * as React from "react";
 import Box from "@mui/material/Box";
@@ -12,6 +13,7 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+
 const useStyles = makeStyles({
   container: {
     background: "#ffffff",
@@ -22,37 +24,43 @@ const useStyles = makeStyles({
     marginTop: 50,
   },
   box: {
-    maxWidth: '100%',
-    maxHeight: '1000',
+    maxWidth: "100%",
+    minHeight: "100vh",
     justifyContent: "center",
-    display: 'flex',
+    display: "flex",
     backgroundImage: `URL(https://images.designtrends.com/wp-content/uploads/2015/11/25101801/Car-Background-Designs3.jpg)`,
   },
 });
 
 export default function Login() {
-  const [values, setValues] = React.useState({
-    amount: "",
-    password: "",
-    // weight: "",
-    // weightRange: "",
-    showPassword: false,
-  });
+  const [username, setUserName] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
-  const handleChange = (prop) => (event) => {
-    setValues({ ...values, [prop]: event.target.value });
+  const navigate = useNavigate();
+
+  const handleChangeUser = (event) => {
+    setUserName(event.target.value);
+  };
+
+  const handleChangePassword = (event) => {
+    setPassword(event.target.value);
   };
 
   const handleClickShowPassword = () => {
-    setValues({
-      ...values,
-      showPassword: !values.showPassword,
-    });
+    setShowPassword(!showPassword);
   };
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
+
+  const onClickLogin = () => {
+    if (username === "admin" && password === "123456") {
+      navigate("/admin");
+    }
+  };
+
   const classes = useStyles();
   return (
     <Box className={classes.box}>
@@ -61,18 +69,13 @@ export default function Login() {
           <div>
             <Typography variant="h3">Admin Login</Typography>
             <FormControl sx={{ m: 1, width: "75%" }} variant="outlined">
-              <InputLabel htmlFor="outlined-adornment-username">
-                User Name
-              </InputLabel>
+              <InputLabel>User Name</InputLabel>
               <OutlinedInput
-                value={values.username}
-                onChange={handleChange("username")}
+                value={username}
+                onChange={(e) => handleChangeUser(e)}
                 endAdornment={
                   <InputAdornment position="end">
-                    <IconButton
-                      // aria-label="password"
-                      edge="end"
-                    >
+                    <IconButton disabled edge="end">
                       <AccountCircleIcon />
                     </IconButton>
                   </InputAdornment>
@@ -86,9 +89,9 @@ export default function Login() {
               </InputLabel>
               <OutlinedInput
                 // id="outlined-adornment-password" Nhớ lịch sử đăng nhập
-                type={values.showPassword ? "text" : "password"}
-                value={values.password}
-                onChange={handleChange("password")}
+                type={showPassword ? "text" : "password"}
+                value={password.password}
+                onChange={(e) => handleChangePassword(e)}
                 endAdornment={
                   <InputAdornment position="end">
                     <IconButton
@@ -97,7 +100,7 @@ export default function Login() {
                       onMouseDown={handleMouseDownPassword}
                       edge="end"
                     >
-                      {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                      {showPassword ? <Visibility /> : <VisibilityOff />}
                     </IconButton>
                   </InputAdornment>
                 }
@@ -107,6 +110,7 @@ export default function Login() {
             <Button
               variant="contained"
               size="medium"
+              onClick={onClickLogin}
               sx={{
                 display: "block",
                 margin: "20px auto",
